@@ -8,17 +8,53 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var peso = ""
+    @State private var altura = ""
+    @State private var imc: Double?
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            TextField("Peso (kg)", text: $peso)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .keyboardType(.numberPad)
+
+            TextField("Altura (m)", text: $altura)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .keyboardType(.decimalPad)
+
+            Button(action: {
+                calcularIMC()
+            }) {
+                Text("Calcular")
+                    .padding()
+                    .background(.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+
+            if let imc = imc {
+                Text("IMC: \(String(format: "%.2f", imc))")
+                    .padding()
+            }
         }
         .padding()
     }
+
+    func calcularIMC() {
+        guard let peso = Double(peso), let altura = Double(altura), altura != 0 else {
+            imc = nil
+            return
+        }
+
+        let imcCalculado = peso / (altura * altura)
+        imc = imcCalculado
+    }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
